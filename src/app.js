@@ -22,21 +22,24 @@ function formalDate(timestamp) {
 }
 
 function displayForecast() {
+  let forecast = response.data.daily; //instead of an array w/days of the week, you'd use "hourly" for hourly, etc.
+
   let forecastElement = document.querySelector("#weekly-forecast");
-  let forecastHTML = `<div class="row">`;
-  let days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  days.forEach(function (day) {
+
+  let forecastHTML = `<div class="row">`; //using html within javascript
+
+  days.forEach(function (forecastDay) {
     forecastHTML =
       forecastHTML +
       `<div class="col-2">
-            <div class="forecast-date">${day}</div>
-             <img src="http://openweathermap.org/img/wn/50d@2x.png"
+            <div class="forecast-date">${forecastDay.dt}</div>
+             <img src="http://openweathermap.org/img/wn/${forecastDay.weather[0].icon}@2x.png"
              alt=""
              width="42"
              />
               <div class="forecast-temps">
-              <span class="max-temp"> 35 </span>
-              <span class="min-temp"> 22 </span>
+              <span class="max-temp"> ${forecastDay.temp.max}° </span>
+              <span class="min-temp"> ${forecastDay.temp.min}° </span>
           </div>
           </div>
           `;
@@ -44,6 +47,13 @@ function displayForecast() {
 
   forecastHTML = forecastHTML + `</div>`;
   forecastElement.innerHTML = forecastHTML;
+}
+
+function getForecast(coordinates) {
+  console.log(coordinates);
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=imperial`;
+  let apiKey = "2d15662f0a607d166c07789453c7a23b";
+  axios.get(apiUrl).then(displayForecast);
 }
 
 function displayTemperature(response) {
@@ -75,6 +85,8 @@ function displayTemperature(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
   weatherPic.setAttribute("alt", response.data.weather[0].description);
+
+  getForecast();
 }
 
 function search(city) {
@@ -118,4 +130,3 @@ let fahrenheitLink = document.querySelector("#fahrenheit-link");
 fahrenheitLink.addEventListener("click", convertToFahrenheit);
 
 search("Boston");
-displayForecast();
