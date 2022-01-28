@@ -40,21 +40,24 @@ function displayForecast(response) {
       forecastHTML =
         forecastHTML +
         `<div class="col-2">
-            <div class="forecast-date">${formatDay(forecastDay.dt)}</div>
+        <figure class="text-center">
+            <div class="weekly-forecast">${formatDay(forecastDay.dt)}</div>
              <img src="http://openweathermap.org/img/wn/${
                forecastDay.weather[0].icon
              }@2x.png"
              alt=""
-             width="42"
+             width="50"
+             class="weekly-forecast"
              />
               <div class="forecast-temps">
               <span class="max-temp"> ${Math.round(
                 forecastDay.temp.max
-              )}° </span>
+              )}° </span> |
               <span class="min-temp"> ${Math.round(
                 forecastDay.temp.min
               )}° </span>
           </div>
+          </figure>
           </div>
           `;
     }
