@@ -22,7 +22,6 @@ function formalDate(timestamp) {
 }
 
 function formatDay(timestamp) {
-  //remember to set function parameters
   let date = new Date(timestamp * 1000);
   let day = date.getDay();
   let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -38,7 +37,6 @@ function displayForecast(response) {
 
   forecast.forEach(function (forecastDay, index) {
     if (index < 6) {
-      //index to limit how many days show
       forecastHTML =
         forecastHTML +
         `<div class="col-2">
@@ -118,7 +116,32 @@ function handleSubmit(event) {
   search(cityInput.value);
 }
 
+function convertToCelcius(event) {
+  event.preventDefault();
+  let temp = document.querySelector("#temp");
+  fahrenheitLink.classList.remove("active");
+  celciusLink.classList.add("active");
+  let celcius = ((temp.innerHTML - 32) * 5) / 9;
+  temp.innerHTML = Math.round(celcius);
+}
+
+function convertToFahrenheit(event) {
+  event.preventDefault();
+  let temp = document.querySelector("#temp");
+  celciusLink.classList.remove("active");
+  fahrenheitLink.classList.add("active");
+  temp.innerHTML = Math.round(temperature);
+}
+
+let temperature = null;
+
 let form = document.querySelector("#city-search");
 form.addEventListener("submit", handleSubmit);
+
+let celciusLink = document.querySelector("#celcius-link");
+celciusLink.addEventListener("click", convertToCelcius);
+
+let fahrenheitLink = document.querySelector("#fahrenheit-link");
+fahrenheitLink.addEventListener("click", convertToFahrenheit);
 
 search("Boston");
