@@ -104,6 +104,50 @@ function displayTemperature(response) {
   getForecast(response.data.coord);
 }
 
+function getCurrentCityTemp(response) {
+  let temp = document.querySelector("#temp");
+  temp.innerHTML = Math.round(response.data.main.temp);
+
+  temperature = response.data.main.temp;
+
+  let city = document.querySelector("#city");
+  city.innerHTML = response.data.name;
+
+  let forecast = document.querySelector("#forecast");
+  forecast.innerHTML = response.data.weather[0].description;
+
+  let feelsLike = document.querySelector("#feels-like");
+  feelsLike.innerHTML = `Feels Like: ${Math.round(
+    response.data.main.feels_like
+  )}°`;
+
+  let humidity = document.querySelector("#humidity");
+  humidity.innerHTML = `Humidity: ${Math.round(response.data.main.humidity)}%`;
+
+  let date = document.querySelector("#date");
+  date.innerHTML = formalDate(response.data.dt * 1000);
+
+  let weatherPic = document.querySelector("#weather");
+  weatherPic.setAttribute(
+    "src",
+    `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
+  );
+  weatherPic.setAttribute("alt", response.data.weather[0].description);
+
+  getForecast(response.data.coord);
+}
+
+function searchLocation(position) {
+  let apiKey = "2d15662f0a607d166c07789453c7a23b";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=imperial`;
+  axios.get(apiUrl).then(getCurrentCityTemp);
+}
+
+function getCurrentCity(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(searchLocation);
+}
+
 function search(city) {
   let apiKey = "2d15662f0a607d166c07789453c7a23b";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
@@ -143,5 +187,8 @@ celciusLink.addEventListener("click", convertToCelcius);
 
 let fahrenheitLink = document.querySelector("#fahrenheit-link");
 fahrenheitLink.addEventListener("click", convertToFahrenheit);
+
+let currentLoc = document.querySelector("#current-city");
+currentLoc.addEventListener("click", getCurrentCity);
 
 search("Boston");
