@@ -77,6 +77,8 @@ function getForecast(coordinates) {
 function displayTemperature(response) {
   let temp = document.querySelector("#temp");
   temp.innerHTML = Math.round(response.data.main.temp);
+  celciusLink.classList.remove("active");
+  fahrenheitLink.classList.add("active");
 
   temperature = response.data.main.temp;
 
